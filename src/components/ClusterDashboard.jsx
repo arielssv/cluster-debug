@@ -36,21 +36,20 @@ export default function ClusterDashboard({ contractData, operators, networkParam
 
   const typeLabel = assetType === 1 ? 'ETH' : 'SSV'
   const eb = contractData.effectiveBalance != null ? BigInt(contractData.effectiveBalance) : 0n
-  const ebScale = eb / 32n
 
   // Our calculated burn rate from operator fees + network fee
   const totalOpFeesPerBlock = operators
     ? operators.reduce((sum, op) => sum + BigInt(op.fee), 0n)
     : 0n
   const networkFeePerBlock = BigInt(networkParams.networkFee)
-  const burnRatePerBlock = (totalOpFeesPerBlock + networkFeePerBlock) * ebScale
+  const burnRatePerBlock = (totalOpFeesPerBlock + networkFeePerBlock) * eb / 32n
   const burnRateAnnual = burnRatePerBlock * BigInt(BLOCKS_PER_YEAR)
 
   // Breakdown for table
   const totalOpFeesAnnual = totalOpFeesPerBlock * BigInt(BLOCKS_PER_YEAR)
-  const totalOpFeesScaled = totalOpFeesAnnual * ebScale
+  const totalOpFeesScaled = totalOpFeesAnnual * eb / 32n
   const networkFeeAnnual = networkFeePerBlock * BigInt(BLOCKS_PER_YEAR)
-  const networkFeeScaled = networkFeeAnnual * ebScale
+  const networkFeeScaled = networkFeeAnnual * eb / 32n
 
   // Contract's burn rate (for reference)
   const contractBurnRate = BigInt(contractData.burnRate)
@@ -161,13 +160,13 @@ export default function ClusterDashboard({ contractData, operators, networkParam
                   <tr className="text-gray-300">
                     <td className="text-gray-400 py-1">Operator Fees</td>
                     <td className="text-right py-1">{formatEther(totalOpFeesAnnual)}</td>
-                    <td className="text-right py-1 text-gray-500">{eb.toString()} EB = x{ebScale.toString()}</td>
+                    <td className="text-right py-1 text-gray-500">{eb.toString()} EB / 32</td>
                     <td className="text-right py-1">{formatEther(totalOpFeesScaled)}</td>
                   </tr>
                   <tr className="text-gray-300">
                     <td className="text-gray-400 py-1">Network Fee</td>
                     <td className="text-right py-1">{formatEther(networkFeeAnnual)}</td>
-                    <td className="text-right py-1 text-gray-500">{eb.toString()} EB = x{ebScale.toString()}</td>
+                    <td className="text-right py-1 text-gray-500">{eb.toString()} EB / 32</td>
                     <td className="text-right py-1">{formatEther(networkFeeScaled)}</td>
                   </tr>
                 </tbody>

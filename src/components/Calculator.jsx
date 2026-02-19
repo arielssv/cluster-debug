@@ -12,8 +12,7 @@ function CalcRow({ label, children }) {
 }
 
 function computeFromEB(newEB, totalFeesPerBlockPerValidator, threshold, minCollateral) {
-  const ebScale = newEB / 32n
-  const burnRate = totalFeesPerBlockPerValidator * ebScale
+  const burnRate = totalFeesPerBlockPerValidator * newEB / 32n
   const dynamicCollateral = burnRate * threshold
   const collateral = dynamicCollateral > minCollateral ? dynamicCollateral : minCollateral
   return { burnRate, collateral }
